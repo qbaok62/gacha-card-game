@@ -46,10 +46,19 @@ export const PackList = () => {
   const [isDragging, setIsDragging] = useState(false);
 
   const [{ rotation, scale }, set] = useSpring(() => ({
-    rotation: INIT_ROTATION,
-    scale: SCALE.INIT,
+    from: {
+      rotation: [
+        INIT_ROTATION[0],
+        INIT_ROTATION[1] - Math.PI * 3,
+        INIT_ROTATION[2],
+      ],
+      scale: SCALE.INIT,
+    },
+    to: {
+      rotation: INIT_ROTATION,
+      scale: SCALE.INIT,
+    },
     config: { mass: 1, tension: 150, friction: 40 },
-    loop: true,
     onRest: () => {
       // Snap back to the angle where the closest card is centered
       const snappedY = snapToClosest(rotation.get()[1]);
@@ -91,7 +100,6 @@ export const PackList = () => {
         set({
           rotation: [0, inertiaY, 0],
           scale: SCALE.ROTATED,
-          immediate: false,
           config: { mass: 0.5, tension: 50, friction: 20 },
         });
       }
